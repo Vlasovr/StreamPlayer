@@ -19,4 +19,6 @@ enum Constants {
     
     static let pauseText = "pause"
     static let playText = "play"
+    
+    static let maxSliderValue: Float = 100.0
 }

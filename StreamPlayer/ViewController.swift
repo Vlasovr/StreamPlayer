@@ -11,8 +11,18 @@ final class ViewController: UIViewController {
         let button = UIButton()
         button.setTitle(Constants.playText, for: .normal)
         button.backgroundColor = .systemBlue
-        button.addTarget(self, action: #selector(play(_:)), for: .touchUpInside)
+        button.addTarget(self, action: #selector(playButtonDidTapped(_:)), for: .touchUpInside)
         return button
+    }()
+    
+    private lazy var volumeSlider = {
+        let slider = UISlider()
+        slider.tintColor = .cyan
+        slider.minimumValue = .zero
+        slider.maximumValue = Constants.maxSliderValue
+        slider.value = Constants.maxSliderValue
+        slider.addTarget(self, action: #selector(volumeDidChanged(_:)), for: .valueChanged)
+        return slider
     }()
     
     override func viewDidLoad() {
@@ -24,12 +34,7 @@ final class ViewController: UIViewController {
         }
     }
     
-    private func setupPlayer(with urlToPlay: URL) {
-        player.media = VLCMedia(url: urlToPlay)
-        player.drawable = streamView
-    }
-    
-    @objc func play(_ sender: UIButton) {
+    @objc func playButtonDidTapped(_ sender: UIButton) {
         if !player.isPlaying {
             player.play()
             button.setTitle(Constants.pauseText, for: .normal)
@@ -37,6 +42,17 @@ final class ViewController: UIViewController {
             player.pause()
             button.setTitle(Constants.playText, for: .normal)
         }
+    }
+    
+    @objc func volumeDidChanged(_ sender: UISlider) {
+        player.audio?.volume = Int32(sender.value)
+    }
+    
+    private func setupPlayer(with urlToPlay: URL) {
+        player.media = VLCMedia(url: urlToPlay)
+        player.media?.addOption( "-vv")
+        player.media?.addOption( "--network-caching=10000")
+        player.drawable = streamView
     }
     
     private func checkStreamAvailability(url: URL) {
@@ -77,5 +93,12 @@ extension ViewController {
         streamView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         streamView.widthAnchor.constraint(equalToConstant: Constants.streamViewWidth).isActive = true
         streamView.heightAnchor.constraint(equalToConstant: Constants.streamViewHeight).isActive = true
+        
+        view.addSubview(volumeSlider)
+
+        volumeSlider.translatesAutoresizingMaskIntoConstraints = false
+        volumeSlider.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: Constants.defaultOffset * 2).isActive = true
+        volumeSlider.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        volumeSlider.widthAnchor.constraint(equalToConstant: Constants.defaultOffset * 2).isActive = true
     }
 }
