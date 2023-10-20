@@ -50,8 +50,6 @@ final class ViewController: UIViewController {
     
     private func setupPlayer(with urlToPlay: URL) {
         player.media = VLCMedia(url: urlToPlay)
-        player.media?.addOption( "-vv")
-        player.media?.addOption( "--network-caching=10000")
         player.drawable = streamView
     }
     
