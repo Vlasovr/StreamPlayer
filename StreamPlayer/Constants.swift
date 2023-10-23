@@ -1,7 +1,7 @@
 import Foundation
 
 enum URLComponents {
-    static let randomStreamURL = "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8"
+    static let randomStreamURL = "http://iptv.rtv-ooe.at/stream.m3u8"
 }
 
 enum Constants {
